@@ -6,7 +6,10 @@ namespace Mango.Services.ProductAPI.Models;
 /// Association model between models Image and Product.
 /// </summary>
 public class ProductImage
-{   
+{
+    [Key]
+    public Guid Id { get; set; }
+
     public Product Product { get; set; }
 
     [Required]
