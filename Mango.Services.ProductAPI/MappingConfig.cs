@@ -13,6 +13,10 @@ public class MappingConfig
             configuration.CreateMap<ProductDto, Product>().ReverseMap();
 
             configuration.CreateMap<CategoryDto, Category>().ReverseMap();
+
+            configuration.CreateMap<ImageDto, Image>().ReverseMap();
+
+            configuration.CreateMap<ProductImageDto, ProductImage>().ReverseMap();
         });
 
         return mappingConfig;

@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Mango.Services.ProductAPI.Models.Dto;
+using System;
 
 namespace Mango.Services.ProductAPI.Repository;
 
-public interface IBasicRepository<T> where T : class
+public interface ICrudRepository<T> where T : IDto
 {
     Task<IEnumerable<T>> GetAll();
-
-    Task<IEnumerable<T>> GetByName(string name);
 
     Task<T> GetById(Guid id);
 
