@@ -1,6 +1,6 @@
 ﻿using Mango.Services.ProductAPI.Models.Dto;
 
-namespace Mango.Services.ProductAPI.Repository;
+namespace Mango.Services.ProductAPI.Repository.Interfaces;
 
 public interface ICategoryRepository : ICrudRepository<CategoryDto>
 {

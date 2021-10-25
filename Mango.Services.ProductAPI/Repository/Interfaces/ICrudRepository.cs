@@ -1,7 +1,7 @@
 ﻿using Mango.Services.ProductAPI.Models.Dto;
 using System;
 
-namespace Mango.Services.ProductAPI.Repository;
+namespace Mango.Services.ProductAPI.Repository.Interfaces;
 
 public interface ICrudRepository<T> where T : class
 {
