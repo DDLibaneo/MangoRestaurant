@@ -3,7 +3,7 @@ using System;
 
 namespace Mango.Services.ProductAPI.Repository;
 
-public interface ICrudRepository<T> where T : IDto
+public interface ICrudRepository<T> where T : class
 {
     Task<IEnumerable<T>> GetAll();
 
