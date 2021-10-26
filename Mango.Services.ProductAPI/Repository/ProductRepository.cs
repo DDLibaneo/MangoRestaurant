@@ -1,37 +1,90 @@
-﻿using Mango.Services.ProductAPI.Models.Dto;
+﻿using AutoMapper;
+using Mango.Services.ProductAPI.DbContexts;
+using Mango.Services.ProductAPI.Models;
+using Mango.Services.ProductAPI.Models.Dto;
 using Mango.Services.ProductAPI.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Mango.Services.ProductAPI.Repository;
 
 public class ProductRepository : IProductRepository
 {
-    public Task<IEnumerable<ProductDto>> GetAll()
+    private readonly ApplicationDbContext _db;
+    private readonly IMapper _mapper;
+
+    public ProductRepository(ApplicationDbContext db, IMapper mapper)
     {
-        throw new NotImplementedException();
+        _db = db;
+        _mapper = mapper;
     }
 
-    public Task<ProductDto> GetById(Guid id)
+    public async Task<IEnumerable<ProductDto>> GetAll()
     {
-        throw new NotImplementedException();
+        var products = await _db.Products.ToListAsync();
+        
+        return _mapper.Map<List<ProductDto>>(products);
     }
 
-    public Task<IEnumerable<ProductDto>> GetByName(string name)
+    public async Task<ProductDto> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
+        
+        return _mapper.Map<ProductDto>(product);
     }
 
-    public Task<ProductDto> Create(ProductDto dto)
+    public async Task<IEnumerable<ProductDto>> GetByName(string name)
     {
-        throw new NotImplementedException();
+        var products = await _db.Products.Where(p => p.Name.Contains(name))
+            .ToListAsync();
+
+        return _mapper.Map<List<ProductDto>>(products);
     }
 
-    public Task<ProductDto> Update(ProductDto dto)
+    public async Task<ProductDto> Create(ProductDto dto)
     {
-        throw new NotImplementedException();
+        var product = _mapper.Map<Product>(dto);
+
+        _db.Products.Add(product);
+        await _db.SaveChangesAsync();
+
+        return _mapper.Map<ProductDto>(product);
     }
 
-    public Task<bool> Delete(Guid id)
+    public async Task<ProductDto> Update(ProductDto dto)
     {
-        throw new NotImplementedException();
+        if (dto.Id == Guid.Empty)
+            throw new ArgumentException("The Id is Required.");
+        
+        var product = await _db.Products.SingleOrDefaultAsync(p => p.Id == dto.Id);
+
+        if (product == null)
+            throw new Exception($@"Product of Id '{dto.Id}' not found.");
+
+        _db.Products.Update(product);
+        await _db.SaveChangesAsync();
+
+        return _mapper.Map<ProductDto>(product);
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+        try
+        {
+            var product = await _db.Products.FirstOrDefaultAsync(u => u.Id == id);
+
+            if (product == null)
+                return false;    
+            
+            _db.Products.Remove(product);
+            await _db.SaveChangesAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
+        }
     }
 }
