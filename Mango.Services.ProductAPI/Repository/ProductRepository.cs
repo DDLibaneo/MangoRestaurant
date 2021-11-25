@@ -26,7 +26,7 @@ public class ProductRepository : IProductRepository
         return _mapper.Map<List<ProductDto>>(products);
     }
 
-    public async Task<ProductDto> GetById(Guid id)
+    public async Task<ProductDto> Get(Guid id)
     {
         var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
         
