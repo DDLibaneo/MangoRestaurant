@@ -11,7 +11,7 @@ public class ImageRepository : IImageRepository
         throw new NotImplementedException();
     }
 
-    public Task<ImageDto> GetById(Guid id)
+    public Task<ImageDto> Get(Guid id)
     {
         throw new NotImplementedException();
     }

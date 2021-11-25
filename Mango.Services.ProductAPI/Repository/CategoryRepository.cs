@@ -10,7 +10,7 @@ namespace Mango.Services.ProductAPI.Repository
             throw new NotImplementedException();
         }
 
-        public Task<CategoryDto> GetById(Guid id)
+        public Task<CategoryDto> Get(Guid id)
         {
             throw new NotImplementedException();
         }
