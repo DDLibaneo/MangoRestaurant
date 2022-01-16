@@ -37,7 +37,7 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<object> Get(Guid id)
+        public async Task<object> Get([FromRoute] Guid id)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace Mango.Services.ProductAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<object> Delete(Guid id)
+        public async Task<object> Delete([FromRoute] Guid id)
         {
             try
             {

@@ -10,7 +10,7 @@ public class ProductDto
 
     public string Description { get; set; }
 
-    public Category Category { get; set; }
+    public CategoryDto Category { get; set; }
 
     public Guid CategoryId { get; set; }
 }

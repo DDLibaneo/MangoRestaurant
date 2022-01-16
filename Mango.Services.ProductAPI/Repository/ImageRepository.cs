@@ -1,10 +1,20 @@
-﻿using Mango.Services.ProductAPI.Models.Dto;
+﻿using AutoMapper;
+using Mango.Services.ProductAPI.DbContexts;
+using Mango.Services.ProductAPI.Models.Dto;
 using Mango.Services.ProductAPI.Repository.Interfaces;
 
 namespace Mango.Services.ProductAPI.Repository;
 
 public class ImageRepository : IImageRepository
 {
+    private readonly ApplicationDbContext _db;
+    private readonly IMapper _mapper;
+
+    public ImageRepository(ApplicationDbContext db, IMapper mapper)
+    {
+        _db = db;
+        _mapper = mapper;
+    }
 
     public Task<IEnumerable<ImageDto>> GetAll()
     {
