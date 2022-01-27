@@ -4,6 +4,7 @@ using Mango.Services.ProductAPI.Models;
 using Mango.Services.ProductAPI.Models.Dto;
 using Mango.Services.ProductAPI.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Mango.Services.ProductAPI.Repository;
 
@@ -52,13 +53,42 @@ public class ImageRepository : IImageRepository
         return _mapper.Map<ImageDto>(image);
     }
 
-    public Task<ImageDto> Update(ImageDto dto)
+    public async Task<ImageDto> Update(ImageDto dto)
     {
-        throw new NotImplementedException();
+        if (dto.Id == Guid.Empty)
+            throw new ArgumentException("The Id is Required.");
+
+        var image = await _db.Images
+            .SingleOrDefaultAsync(i => i.Id == dto.Id);
+
+        if (image == null)
+            throw new Exception($@"Image Id '{dto.Id}' not found.");
+
+        _db.Images.Update(image);
+        await _db.SaveChangesAsync();
+
+        return _mapper.Map<ImageDto>(image);
     }
 
-    public Task<bool> Delete(Guid id)
+    public async Task<bool> Delete(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var image = await _db.Images
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (image == null) 
+                return false;
+
+            _db.Images.Remove(image);
+            await _db.SaveChangesAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
+        }
     }
 }
