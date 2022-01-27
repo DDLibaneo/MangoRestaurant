@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Mango.Services.ProductAPI.DbContexts;
+using Mango.Services.ProductAPI.Models;
 using Mango.Services.ProductAPI.Models.Dto;
 using Mango.Services.ProductAPI.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mango.Services.ProductAPI.Repository;
 
@@ -16,24 +18,38 @@ public class ImageRepository : IImageRepository
         _mapper = mapper;
     }
 
-    public Task<IEnumerable<ImageDto>> GetAll()
+    public async Task<IEnumerable<ImageDto>> GetAll()
     {
-        throw new NotImplementedException();
+        var images = await _db.Images.ToListAsync();
+
+        return _mapper.Map<List<ImageDto>>(images);
     }
 
-    public Task<ImageDto> Get(Guid id)
+    public async Task<ImageDto> Get(Guid id)
     {
-        throw new NotImplementedException();
+        var images = await _db.Images
+            .FirstOrDefaultAsync(i => i.Id == id);
+
+        return _mapper.Map<ImageDto>(images);
     }
 
-    public Task<IEnumerable<ImageDto>> GetByName(string name)
+    public async Task<IEnumerable<ImageDto>> GetByName(string name)
     {
-        throw new NotImplementedException();
+        var images = await _db.Images
+            .Where(i => i.Name.Contains(name))
+            .ToListAsync();
+
+        return _mapper.Map<List<ImageDto>>(images);
     }
 
-    public Task<ImageDto> Create(ImageDto dto)
+    public async Task<ImageDto> Create(ImageDto dto)
     {
-        throw new NotImplementedException();
+        var image = _mapper.Map<Image>(dto);
+
+        _db.Images.Add(image);
+        await _db.SaveChangesAsync();
+
+        return _mapper.Map<ImageDto>(image);
     }
 
     public Task<ImageDto> Update(ImageDto dto)

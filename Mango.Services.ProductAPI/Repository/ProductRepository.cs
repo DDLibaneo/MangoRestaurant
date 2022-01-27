@@ -71,7 +71,7 @@ public class ProductRepository : IProductRepository
     {
         try
         {
-            var product = await _db.Products.FirstOrDefaultAsync(u => u.Id == id);
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null)
                 return false;    

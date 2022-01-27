@@ -4,6 +4,7 @@ using Mango.Services.ProductAPI.Models;
 using Mango.Services.ProductAPI.Models.Dto;
 using Mango.Services.ProductAPI.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Mango.Services.ProductAPI.Repository
 {
@@ -27,14 +28,16 @@ namespace Mango.Services.ProductAPI.Repository
 
         public async Task<CategoryDto> Get(Guid id)
         {
-            var category = await _db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            var category = await _db.Categories
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             return _mapper.Map<CategoryDto>(category);
         }
 
         public async Task<IEnumerable<CategoryDto>> GetByName(string name)
         {
-            var categories = await _db.Categories.Where(c => c.Name.Contains(name))
+            var categories = await _db.Categories
+                .Where(c => c.Name.Contains(name))
                 .ToListAsync();
 
             return _mapper.Map<List<CategoryDto>>(categories);
@@ -50,14 +53,43 @@ namespace Mango.Services.ProductAPI.Repository
             return _mapper.Map<CategoryDto>(category);
         }
 
-        public Task<CategoryDto> Update(CategoryDto dto)
+        public async Task<CategoryDto> Update(CategoryDto dto)
         {
-            throw new NotImplementedException();
+            if (dto.Id == Guid.Empty)
+                throw new ArgumentException("The Id is Required.");
+
+            var category = await _db.Categories
+                .SingleOrDefaultAsync(c => c.Id == dto.Id);
+
+            if (category == null)
+                throw new Exception($@"Category Id '{dto.Id}' not found.");
+
+            _db.Categories.Update(category);
+            await _db.SaveChangesAsync();
+
+            return _mapper.Map<CategoryDto>(category);
         }
 
-        public Task<bool> Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var category = await _db.Categories
+                    .FirstOrDefaultAsync(c => c.Id == id);
+
+                if (category == null)
+                    return false;
+
+                _db.Categories.Remove(category);
+                await _db.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+            }
         }
     }
 }
