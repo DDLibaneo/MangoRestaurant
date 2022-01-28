@@ -21,21 +21,27 @@ public class ProductRepository : IProductRepository
 
     public async Task<IEnumerable<ProductDto>> GetAll()
     {
-        var products = await _db.Products.ToListAsync();
+        var products = await _db.Products
+            .Include(p => p.Category)
+            .ToListAsync();
         
         return _mapper.Map<List<ProductDto>>(products);
     }
 
     public async Task<ProductDto> Get(Guid id)
     {
-        var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
+        var product = await _db.Products
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id);
         
         return _mapper.Map<ProductDto>(product);
     }
 
     public async Task<IEnumerable<ProductDto>> GetByName(string name)
     {
-        var products = await _db.Products.Where(p => p.Name.Contains(name))
+        var products = await _db.Products
+            .Include(p => p.Category)
+            .Where(p => p.Name.Contains(name))
             .ToListAsync();
 
         return _mapper.Map<List<ProductDto>>(products);
