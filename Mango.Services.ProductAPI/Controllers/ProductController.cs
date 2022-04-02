@@ -20,7 +20,7 @@ namespace Mango.Services.ProductAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<object> GetAll()
+        public async Task<ActionResult<object>> GetAll()
         {
             try
             {
@@ -29,15 +29,15 @@ namespace Mango.Services.ProductAPI.Controllers
             }
             catch (Exception ex)
             {
-                SetErrorResponse(ex);    
+                SetErrorResponse(ex);
             }
 
-            return _responseDto;
+            return Ok(_responseDto);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<object> Get([FromRoute] Guid id)
+        public async Task<ActionResult<object>> Get([FromRoute] Guid id)
         {
             try
             {
@@ -49,14 +49,17 @@ namespace Mango.Services.ProductAPI.Controllers
                 SetErrorResponse(ex);
             }
 
-            return _responseDto;
+            return Ok(_responseDto);
         }
 
         [HttpPost]
-        public async Task<object> Create([FromBody] ProductDto productDto)
+        public async Task<ActionResult<object>> Create([FromBody] ProductDto productDto)
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
                 var dto = await _productRepository.Create(productDto);
                 _responseDto.Result = productDto;
             }
@@ -65,15 +68,19 @@ namespace Mango.Services.ProductAPI.Controllers
                 SetErrorResponse(ex);
             }
 
-            return _responseDto;
+            return Ok(_responseDto);
         }
 
         [HttpPut]
-        public async Task<object> Update([FromBody] ProductDto productDto)
+        public async Task<ActionResult<object>> Put([FromBody] ProductDto productDto)
         {
             try
             {
+                if (productDto.Id == Guid.Empty)
+                    return BadRequest("The Id is Required.");
+
                 var dto = await _productRepository.Update(productDto);
+
                 _responseDto.Result = productDto;
             }
             catch (Exception ex)
@@ -81,7 +88,7 @@ namespace Mango.Services.ProductAPI.Controllers
                 SetErrorResponse(ex);
             }
 
-            return _responseDto;
+            return Ok(_responseDto);
         }
 
         [HttpDelete]
@@ -97,7 +104,7 @@ namespace Mango.Services.ProductAPI.Controllers
                 SetErrorResponse(ex);
             }
 
-            return _responseDto;
+            return Ok(_responseDto);
         }
 
         private void SetErrorResponse(Exception ex)
