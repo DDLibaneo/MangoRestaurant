@@ -53,7 +53,7 @@ public class ImageRepository : IImageRepository
         return _mapper.Map<ImageDto>(image);
     }
 
-    public async Task<ImageDto> Update(ImageDto dto)
+    public async Task<ImageDto> Put(ImageDto dto)
     {
         if (dto.Id == Guid.Empty)
             throw new ArgumentException("The Id is Required.");

@@ -57,7 +57,7 @@ public class ProductRepository : IProductRepository
         return _mapper.Map<ProductDto>(product);
     }
 
-    public async Task<ProductDto> Update(ProductDto dto)
+    public async Task<ProductDto> Put(ProductDto dto)
     {
         if (dto.Id == Guid.Empty)
             throw new ArgumentException("The Id is Required.");
@@ -67,7 +67,9 @@ public class ProductRepository : IProductRepository
         if (product == null)
             throw new Exception($@"Product of Id '{dto.Id}' not found.");
 
-        _db.Products.Update(product);
+        _mapper.Map(dto, product);
+
+        //_db.Products.Update(product);
         await _db.SaveChangesAsync();
 
         return _mapper.Map<ProductDto>(product);

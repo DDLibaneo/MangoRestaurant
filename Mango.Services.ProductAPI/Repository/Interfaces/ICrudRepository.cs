@@ -11,7 +11,7 @@ public interface ICrudRepository<T> where T : class
 
     Task<T> Create(T dto);
 
-    Task<T> Update(T dto);
+    Task<T> Put(T dto);
 
     Task<bool> Delete(Guid id);
 }

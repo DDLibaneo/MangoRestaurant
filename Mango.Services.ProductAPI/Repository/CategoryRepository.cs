@@ -53,7 +53,7 @@ namespace Mango.Services.ProductAPI.Repository
             return _mapper.Map<CategoryDto>(category);
         }
 
-        public async Task<CategoryDto> Update(CategoryDto dto)
+        public async Task<CategoryDto> Put(CategoryDto dto)
         {
             if (dto.Id == Guid.Empty)
                 throw new ArgumentException("The Id is Required.");

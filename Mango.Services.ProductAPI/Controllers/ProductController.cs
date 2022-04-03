@@ -79,7 +79,7 @@ namespace Mango.Services.ProductAPI.Controllers
                 if (productDto.Id == Guid.Empty)
                     return BadRequest("The Id is Required.");
 
-                var dto = await _productRepository.Update(productDto);
+                var dto = await _productRepository.Put(productDto);
 
                 _responseDto.Result = productDto;
             }
