@@ -32,6 +32,8 @@ namespace Mango.Services.ProductAPI.Controllers
                 SetErrorResponse(ex);
             }
 
+            SetSuccessfulResponse();
+
             return Ok(_responseDto);
         }
 
@@ -70,6 +72,8 @@ namespace Mango.Services.ProductAPI.Controllers
                 SetErrorResponse(ex);
             }
 
+            SetSuccessfulResponse();
+
             return Ok(_responseDto);
         }
 
@@ -90,6 +94,8 @@ namespace Mango.Services.ProductAPI.Controllers
                 SetErrorResponse(ex);
             }
 
+            SetSuccessfulResponse();
+
             return Ok(_responseDto);
         }
 
@@ -105,6 +111,8 @@ namespace Mango.Services.ProductAPI.Controllers
             {
                 SetErrorResponse(ex);
             }
+
+            SetSuccessfulResponse();
 
             return Ok(_responseDto);
         }
